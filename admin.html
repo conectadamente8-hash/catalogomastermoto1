@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumStore | Dashboard Administrador</title>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+        <div class="admin-logo">
+            <a href="index.html" class="logo">QUANTUM</a>
+            <span style="font-size: 0.65rem; background: var(--accent-turquoise); color: #0A0A0A; padding: 0.2rem 0.5rem; border-radius: var(--radius-sm); font-weight: 700; text-transform: uppercase;">Console</span>
+        </div>
+        
+        <ul class="admin-menu">
+            <li>
+                <div class="admin-menu-link active" id="menu-inventory" onclick="switchSection('inventory')">
+                    <i class="fas fa-cubes"></i> <span>Inventario</span>
+                </div>
+            </li>
+            <li>
+                <div class="admin-menu-link" id="menu-add" onclick="openNewProductForm()">
+                    <i class="fas fa-plus-circle"></i> <span>Nuevo Producto</span>
+                </div>
+            </li>
+            <li>
+                <a href="index.html" class="admin-menu-link">
+                    <i class="fas fa-eye"></i> <span>Ver Catálogo</span>
+                </a>
+            </li>
+            <li style="margin-top: auto;">
+                <div class="admin-menu-link admin-logout" onclick="logoutAdmin()">
+                    <i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span>
+                </div>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- MAIN BODY -->
+    <main class="admin-main">
+        
+        <!-- HEADER -->
+        <header class="admin-header">
+            <div>
+                <h1 style="font-size: 2rem;">Inventario del Catálogo</h1>
+                <p style="color: var(--text-secondary); margin-top: 0.25rem;">Administra tus productos, imágenes y detalles de stock.</p>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="theme-toggle" id="theme-toggle" title="Cambiar Tema">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <div style="font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; background: var(--bg-primary); padding: 0.5rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <i class="fas fa-user-circle" style="color: var(--accent-turquoise);"></i> Admin
+                </div>
+            </div>
+        </header>
+
+        <!-- STATS CARDS -->
+        <section class="admin-stats-grid">
+            <div class="admin-stat-card">
+                <div class="admin-stat-info">
+                    <span id="stat-total-label">Total Productos</span>
+                    <h3 id="stat-total-products">0</h3>
+                </div>
+                <div class="admin-stat-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+            </div>
+            
+            <div class="admin-stat-card">
+                <div class="admin-stat-info">
+                    <span>Agotados</span>
+                    <h3 id="stat-out-of-stock" style="color: #E63946;">0</h3>
+                </div>
+                <div class="admin-stat-icon" style="color: #E63946; background-color: rgba(230,57,70,0.05);">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            </div>
+            
+            <div class="admin-stat-card">
+                <div class="admin-stat-info">
+                    <span>Categorías</span>
+                    <h3 id="stat-categories">0</h3>
+                </div>
+                <div class="admin-stat-icon" style="color: var(--accent-yellow); background-color: rgba(255,214,0,0.05);">
+                    <i class="fas fa-tags"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCT FORM CARD (Hidden by default, shown on create/edit) -->
+        <section class="admin-card" id="product-form-section" style="display: none;">
+            <div class="admin-card-header">
+                <h2 id="form-title" style="font-size: 1.5rem;"><i class="fas fa-edit" style="color: var(--accent-turquoise); margin-right: 0.5rem;"></i> Agregar Producto</h2>
+                <button class="admin-action-btn" onclick="closeForm()" title="Cancelar"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <form id="product-form">
+                <input type="hidden" id="prod-id">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="prod-name" class="form-label">Nombre del Producto</label>
+                        <input type="text" id="prod-name" class="form-control" placeholder="Ej: CyberSedan Roadster" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="prod-category" class="form-label">Categoría</label>
+                        <input type="text" id="prod-category" class="form-control" placeholder="Ej: Vehículos, Tecnología, Energía..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="prod-price" class="form-label">Precio (USD)</label>
+                        <input type="number" id="prod-price" class="form-control" placeholder="Ej: 45000" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="prod-stock" class="form-label">Stock Disponible</label>
+                        <input type="number" id="prod-stock" class="form-control" placeholder="Ej: 10" min="0" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="prod-desc" class="form-label">Descripción Detallada</label>
+                        <textarea id="prod-desc" class="form-control" placeholder="Escriba las características del producto..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label">Imágenes del Producto (Máximo 4 imágenes)</label>
+                        
+                        <!-- Upload Area for Files -->
+                        <div class="image-upload-area" onclick="triggerFileInput()">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Haz click para subir imágenes (PNG, JPG, WEBP)</p>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">Se convertirán localmente a Base64. Puedes seleccionar varios archivos a la vez.</span>
+                            <input type="file" id="prod-file-input" style="display: none;" accept="image/*" multiple onchange="handleFileSelect(event)">
+                        </div>
+                        
+                        <!-- Text Input fallback for URLs -->
+                        <div style="margin-top: 1rem;">
+                            <label for="prod-url-input" class="form-label" style="font-size: 0.75rem;">O ingresa una URL de imagen externa y presiona agregar:</label>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 0.25rem;">
+                                <input type="url" id="prod-url-input" class="form-control" placeholder="https://images.unsplash.com/photo-...">
+                                <button type="button" class="btn btn-secondary" onclick="addUrlImage()" style="padding: 0 1.5rem; border-radius: var(--radius-md);">Agregar</button>
+                            </div>
+                        </div>
+
+                        <!-- Image Preview Grid -->
+                        <div class="image-previews" id="image-previews-grid">
+                            <!-- Populated in JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-outline-dark" onclick="closeForm()">Cancelar</button>
+                    <button type="submit" class="btn btn-secondary" id="save-btn"><i class="fas fa-save"></i> Guardar Producto</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- PRODUCT LIST SECTION -->
+        <section class="admin-card" id="inventory-list-section">
+            <div class="admin-card-header">
+                <h2 style="font-size: 1.5rem;">Listado de Artículos</h2>
+                <button class="btn btn-secondary" onclick="openNewProductForm()"><i class="fas fa-plus"></i> Nuevo Producto</button>
+            </div>
+            
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-product-rows">
+                        <!-- Populated in JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JS Files -->
+    <script src="products-data.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumStore | Acceso Administrador</title>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-wrapper">
+
+    <div class="login-card glass-panel">
+        <a href="index.html" class="logo" style="font-size: 2rem;">QUANTUM</a>
+        
+        <h1 style="text-align: center; margin-bottom: 2rem; font-size: 1.5rem; font-weight: 500;">Consola de Administración</h1>
+        
+        <form id="login-form">
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="username" class="form-label">Usuario</label>
+                <input type="text" id="username" class="form-control" placeholder="Ingrese su usuario" required autocomplete="username">
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" id="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+            
+            <div id="login-error" style="color: #E63946; font-size: 0.85rem; margin-bottom: 1.5rem; text-align: center; display: none;">
+                <i class="fas fa-exclamation-circle"></i> Credenciales incorrectas. Intente nuevamente.
+            </div>
+            
+            <button type="submit" class="btn btn-secondary" style="width: 100%;"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="index.html" style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-arrow-left"></i> Volver al Catálogo</a>
+        </div>
+    </div>
+
+    <script>
+        // Simple authentication verification
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if already authenticated
+            if (sessionStorage.getItem('tesla_admin_auth') === 'true') {
+                window.location.href = 'admin.html';
+            }
+
+            // Theme sync
+            const savedTheme = localStorage.getItem('tesla_catalog_theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+
+            const loginForm = document.getElementById('login-form');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const errorMsg = document.getElementById('login-error');
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const user = usernameInput.value.trim();
+                const pass = passwordInput.value;
+
+                // Simple admin / admin123 credentials for local deployment
+                if (user === 'admin' && pass === 'admin123') {
+                    sessionStorage.setItem('tesla_admin_auth', 'true');
+                    window.location.href = 'admin.html';
+                } else {
+                    errorMsg.style.display = 'block';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
